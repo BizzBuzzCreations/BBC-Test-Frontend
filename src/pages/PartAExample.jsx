@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+/* import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 const PartAExample = () => {
@@ -7,7 +7,7 @@ const PartAExample = () => {
   const hasSpokenRef = useRef(false);
 
   useEffect(() => {
-    if (hasSpokenRef.current) return; // prevent double speaking
+    if (hasSpokenRef.current) return;
     hasSpokenRef.current = true;
 
     const text = `
@@ -36,10 +36,10 @@ const PartAExample = () => {
 
   return (
     <div className="flex-1 flex items-center justify-center bg-[#cfcbd1]">
-      <div className="bg-[#e9e9eb] w-[900px] rounded-2xl shadow-md p-14 text-center">
+      <div className="bg-[#e9e9eb] max-w-2xl w-full rounded-2xl shadow-md p-10 text-center">
 
         <h1 className="text-3xl font-bold mb-6">
-          Example for Part A
+          Example for Part A:
         </h1>
 
         <p className="text-lg mb-4">
@@ -80,4 +80,4 @@ const PartAExample = () => {
   );
 };
 
-export default PartAExample;
+export default PartAExample; */

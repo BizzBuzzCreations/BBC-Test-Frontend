@@ -1,27 +1,45 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const PartB = () => {
-  const navigate = useNavigate();
-  const mediaRecorderRef = useRef(null);
 
-  const [showRecordBtn, setShowRecordBtn] = useState(false);
-  const [isRecording, setIsRecording] = useState(false);
+  const navigate = useNavigate();
+
+  const [showInput, setShowInput] = useState(false);
+  const [answer, setAnswer] = useState("");
   const [timeLeft, setTimeLeft] = useState(15);
-  const [showComplete, setShowComplete] = useState(false);
-  const [showNext, setShowNext] = useState(false);
+  const [timerStarted, setTimerStarted] = useState(false);
+  const [timeUp, setTimeUp] = useState(false);
+
+  const [isCorrect,setIsCorrect] = useState(false);
+
+ 
+  const correctAnswers = [
+    "good sales is not about forcing a product but about understanding the customers needs",
+    "good sales is not about forcing a product but about understanding customer needs"
+  ];
+
+
+  const normalize = (text) => {
+    return text
+      .toLowerCase()
+      .replace(/[.,’']/g,"")
+      .trim();
+  };
+
 
   useEffect(() => {
-    window.speechSynthesis.cancel(); 
+
+    window.speechSynthesis.cancel();
 
     const speech = new SpeechSynthesisUtterance(
-      "Part B. Listen to the sentence and repeat each sentence that you hear. And your sentence is: my name is John and I want to play badminton."
+      "Part B. Listen to the sentence and repeat it exactly. Your sentence is: Good sales is not about forcing a product, but about understanding the customer’s needs."
     );
 
     speech.rate = 0.9;
 
     speech.onend = () => {
-      setShowRecordBtn(true);
+      setShowInput(true);
     };
 
     window.speechSynthesis.speak(speech);
@@ -29,94 +47,108 @@ const PartB = () => {
     return () => {
       window.speechSynthesis.cancel();
     };
+
   }, []);
 
-  // Timer logic
+
+
+
   useEffect(() => {
+
     let timer;
 
-    if (isRecording && timeLeft > 0) {
-      timer = setTimeout(() => setTimeLeft((prev) => prev - 1), 1000);
+    if (timerStarted && timeLeft > 0) {
+
+      timer = setTimeout(() => {
+        setTimeLeft((prev) => prev - 1);
+      }, 1000);
+
     }
 
-    if (timeLeft === 0 && isRecording) {
-      stopRecording();
-      navigate("/part-c-example");
+    if (timeLeft === 0 && timerStarted) {
+
+      setTimeUp(true);
+
+      const userAnswer = normalize(answer);
+
+      const isAnswerCorrect = correctAnswers.includes(userAnswer);
+
+      setIsCorrect(isAnswerCorrect);
+
+      console.log("User Answer:",userAnswer);
+      console.log("Correct:",isAnswerCorrect);
+
     }
 
     return () => clearTimeout(timer);
-  }, [timeLeft, isRecording, navigate]);
 
-  const startRecording = async () => {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const mediaRecorder = new MediaRecorder(stream);
-    mediaRecorderRef.current = mediaRecorder;
+  }, [timerStarted,timeLeft]);
 
-    mediaRecorder.start();
-    setIsRecording(true);
-    setShowComplete(true);
+
+
+
+  const handleTyping = (e) => {
+
+    setAnswer(e.target.value);
+
+    if (!timerStarted) {
+      setTimerStarted(true);
+    }
+
   };
 
-  const stopRecording = () => {
-    mediaRecorderRef.current?.stop();
-    setIsRecording(false);
-  };
 
-  const handleComplete = () => {
-    stopRecording();
-    setShowNext(true);
-  };
+
 
   return (
-    <div className="flex-1 flex items-center justify-center bg-[#cfcbd1]">
-      <div className="bg-[#e9e9eb] w-[850px] rounded-2xl shadow-md p-14 text-center">
 
-        <h1 className="text-3xl font-bold mb-6">
-          Part B
+    <div className="min-h-screen w-full bg-[#cfcbd1] flex items-center justify-center">
+
+      <div className="bg-[#e9e9eb] w-full max-w-3xl rounded-2xl shadow-lg p-12 text-center">
+
+        <h1 className="text-4xl font-bold mb-6">
+          Part B: Repeat a sentence
         </h1>
 
-        <p className="text-lg">
+        <p className="text-lg mb-10">
           Listen to the sentence and repeat it exactly.
         </p>
 
-        {showRecordBtn && !isRecording && !showNext && (
-          <button
-            onClick={startRecording}
-            className="mt-10 bg-[#1f2f3f] text-white px-10 py-3 rounded-lg hover:opacity-90 transition"
-          >
-            Record Answer
-          </button>
-        )}
+        {showInput && (
+          <>
+            
+            <input
+              type="text"
+              value={answer}
+              onChange={handleTyping}
+              disabled={timeUp}
+              placeholder="Type the sentence here..."
+              className="w-[75%] border border-gray-400 rounded-lg px-4 py-3 text-lg outline-none"
+            />
 
-        {isRecording && (
-          <div className="mt-6">
-            <p className="text-red-600 font-semibold text-xl">
+           
+            <p className="mt-6 text-red-600 text-xl font-semibold">
               Time Left: {timeLeft}s
             </p>
-          </div>
-        )}
 
-        {showComplete && !showNext && (
-          <button
-            onClick={handleComplete}
-            className="mt-6 bg-[#1f2f3f] text-white px-8 py-2 rounded-lg hover:opacity-90 transition"
-          >
-            Complete
-          </button>
-        )}
-
-        {showNext && (
-          <button
-            onClick={() => navigate("/part-c-example")}
-            className="mt-6 bg-[#1f2f3f] text-white px-10 py-3 rounded-lg hover:opacity-90 transition"
-          >
-            Next
-          </button>
+            
+            {timeUp && (
+              <button
+                onClick={() => navigate("/part-c")}
+                className="mt-10 bg-[#1f2f3f] text-white px-10 py-3 rounded-lg hover:opacity-90 transition"
+              >
+                Next
+              </button>
+            )}
+          </>
         )}
 
       </div>
+
     </div>
+
   );
+
 };
 
 export default PartB;

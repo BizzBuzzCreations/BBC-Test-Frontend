@@ -2,165 +2,278 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const PartC = () => {
+
   const navigate = useNavigate();
   const audioRef = useRef(null);
-  const mediaRecorderRef = useRef(null);
 
-  const [showAudio, setShowAudio] = useState(false);
-  const [showRecordBtn, setShowRecordBtn] = useState(false);
-  const [isRecording, setIsRecording] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(15);
-  const [showComplete, setShowComplete] = useState(false);
-  const [showNext, setShowNext] = useState(false);
+  const [audioPlayed,setAudioPlayed] = useState(false);
+  const [startQuestions,setStartQuestions] = useState(false);
 
-  const hasStartedRef = useRef(false);
+  const [currentQuestion,setCurrentQuestion] = useState(0);
+  const [timeLeft,setTimeLeft] = useState(10);
+  const [answer,setAnswer] = useState("");
 
-  
-  useEffect(() => {
-    if (hasStartedRef.current) return;   
-    hasStartedRef.current = true;
+  const [timerStarted,setTimerStarted] = useState(false);
+
+  const [showNextQuestion,setShowNextQuestion] = useState(false);
+  const [showFinalNext,setShowFinalNext] = useState(false);
+
+  const [results,setResults] = useState([]);
+
+
+  const questions = [
+    "What is Anna Greig’s address?",
+    "What is Anna Greig’s nationality?",
+    "What is the serial number of the computer?",
+    "What was the material of the Claude Frieder shoulder bag?"
+  ];
+ 
+  const correctAnswers = [
+    ["4 ellendale street","4 ellendale st"],
+    ["grenadian nationality","grenadian"],
+    ["g4168770"],
+    ["silver coloured cloth","silver colored cloth"]
+  ];
+
+
+  const normalize = (text) => {
+    return text
+      .toLowerCase()
+      .replace(/[.,’'--]/g," ")
+      .replace(/\s+/g," ")
+      .trim();
+  };
+
+
+
+  useEffect(()=>{
 
     window.speechSynthesis.cancel();
 
     const intro = new SpeechSynthesisUtterance(
-      "Part C. Listen to two people have a conversation. Then answer a question about the conversation."
+      "Part C. Listen to two people have a conversation. Then answer four questions about the conversation."
     );
 
     intro.rate = 0.9;
 
-    intro.onend = () => {
-      setTimeout(() => {
-        setShowAudio(true);
-      }, 1000); 
-    };
-
     window.speechSynthesis.speak(intro);
 
-    return () => {
-      window.speechSynthesis.cancel();
-    };
-  }, []);
+  },[]);
 
-  
-  useEffect(() => {
-    if (showAudio && audioRef.current) {
-      audioRef.current.play().catch(() => {});
-    }
-  }, [showAudio]);
 
-  
-  const handleAudioEnd = () => {
-    setTimeout(() => {
-      const question = new SpeechSynthesisUtterance(
-        "What is the conclusion of the story?"
-      );
 
-      question.rate = 0.9;
 
-      question.onend = () => {
-        setShowRecordBtn(true);
-      };
+  const handleAudioEnd = ()=>{
 
-      window.speechSynthesis.speak(question);
-    }, 1000); 
+    setAudioPlayed(true);
+
+    setTimeout(()=>{
+
+      setStartQuestions(true);
+      speakQuestion(0);
+
+    },1000);
+
   };
 
-  
-  useEffect(() => {
-    let timer;
 
-    if (isRecording && timeLeft > 0) {
-      timer = setTimeout(() => setTimeLeft((prev) => prev - 1), 1000);
+
+
+  const speakQuestion = (index)=>{
+
+    const speech = new SpeechSynthesisUtterance(questions[index]);
+
+    speech.rate = 0.9;
+
+    window.speechSynthesis.speak(speech);
+
+  };
+
+
+
+
+  useEffect(()=>{
+
+    if(!timerStarted) return;
+
+    if(timeLeft === 0){
+
+      setTimerStarted(false);
+
+      const userAnswer = normalize(answer);
+
+      const acceptableAnswers =
+        correctAnswers[currentQuestion].map(a => normalize(a));
+
+      const isCorrect = acceptableAnswers.includes(userAnswer);
+
+      setResults(prev => [...prev,isCorrect]);
+
+      console.log("Question:",currentQuestion+1);
+      console.log("User Answer:",userAnswer);
+      console.log("Correct:",isCorrect);
+
+      if(currentQuestion < questions.length - 1){
+
+        setShowNextQuestion(true);
+
+      }else{
+
+        setShowFinalNext(true);
+
+      }
+
+      return;
+
     }
 
-    if (timeLeft === 0 && isRecording) {
-      stopRecording();
-      navigate("/part-d");
-    }
+    const timer = setTimeout(()=>{
+      setTimeLeft(prev => prev - 1)
+    },1000);
 
     return () => clearTimeout(timer);
-  }, [timeLeft, isRecording, navigate]);
 
-  const startRecording = async () => {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const mediaRecorder = new MediaRecorder(stream);
-    mediaRecorderRef.current = mediaRecorder;
+  },[timeLeft,timerStarted]);
 
-    mediaRecorder.start();
-    setIsRecording(true);
-    setShowComplete(true);
+
+
+
+  const handleTyping = (e)=>{
+
+    setAnswer(e.target.value);
+
+    if(!timerStarted){
+      setTimerStarted(true);
+    }
+
   };
 
-  const stopRecording = () => {
-    mediaRecorderRef.current?.stop();
-    setIsRecording(false);
+
+
+
+  const goToNextQuestion = ()=>{
+
+    const next = currentQuestion + 1;
+
+    setCurrentQuestion(next);
+    setAnswer("");
+    setTimeLeft(10);
+
+    setShowNextQuestion(false);
+
+    speakQuestion(next);
+
   };
 
-  const handleComplete = () => {
-    stopRecording();
-    setShowNext(true);
-  };
 
-  return (
-    <div className="flex-1 flex items-center justify-center bg-[#cfcbd1]">
-      <div className="bg-[#e9e9eb] w-[900px] rounded-2xl shadow-md p-12 text-center">
 
-        <h1 className="text-3xl font-bold mb-6">Part C</h1>
+
+  return(
+
+    <div className="min-h-screen flex items-center justify-center bg-[#cfcbd1] px-4">
+
+      <div className="bg-[#e9e9eb] w-full max-w-4xl rounded-2xl shadow-lg p-10 text-center">
+
+        <h1 className="text-3xl font-bold mb-6">
+          Part C: Answer the questions about the conversation
+        </h1>
 
         <p className="text-lg mb-6">
-          Listen to 2 people have a conversation. Then answer a question about the conversation.
+          Listen to 2 people have a conversation. Then answer 4 questions about the conversation.
         </p>
 
-        {showAudio && (
-          <div className="mb-6">
-            <audio
-              ref={audioRef}
-              src="/audio/audio1.mp3"
-              onEnded={handleAudioEnd}
-              controls={false}
-            />
-            <p className="mt-4 text-gray-600">
-              Please listen carefully. You will not be able to replay.
+
+        <div className="mb-8">
+
+          <audio
+            ref={audioRef}
+            src="/audio/Part-C-Audio.mp3"
+            controls
+            controlsList="nodownload noplaybackrate"
+            onEnded={handleAudioEnd}
+            onPlay={()=>{
+              if(audioPlayed){
+                audioRef.current.pause();
+                audioRef.current.currentTime = 0;
+              }
+            }}
+            className="mx-auto"
+          />
+
+          <p className="mt-4 text-gray-600">
+            Please listen to the audio carefully. You will not be able to replay it.
+          </p>
+
+        </div>
+
+
+        {startQuestions && (
+
+          <div className="space-y-6">
+
+            <h2 className="text-xl font-semibold">
+              Question {currentQuestion + 1}
+            </h2>
+
+            <p className="text-lg">
+              {questions[currentQuestion]}
             </p>
+
+
+            <input
+              type="text"
+              value={answer}
+              onChange={handleTyping}
+              disabled={showNextQuestion || showFinalNext}
+              placeholder="Type your answer..."
+              className="w-full p-3 border rounded-lg disabled:bg-gray-400"
+            />
+
+
+            {timerStarted && (
+
+              <p className="text-red-600 font-semibold">
+                Time Left: {timeLeft}s
+              </p>
+
+            )}
+
           </div>
+
         )}
 
-        {showRecordBtn && !isRecording && !showNext && (
+
+
+        {showNextQuestion && (
+
           <button
-            onClick={startRecording}
+            onClick={goToNextQuestion}
             className="mt-6 bg-[#1f2f3f] text-white px-10 py-3 rounded-lg"
           >
-            Record Answer
+            Next Question
           </button>
+
         )}
 
-        {isRecording && (
-          <p className="mt-6 text-red-600 text-xl font-semibold">
-            Time Left: {timeLeft}s
-          </p>
-        )}
 
-        {showComplete && !showNext && (
+
+        {showFinalNext && (
+
           <button
-            onClick={handleComplete}
-            className="mt-4 bg-[#1f2f3f] text-white px-8 py-2 rounded-lg"
-          >
-            Complete
-          </button>
-        )}
-
-        {showNext && (
-          <button
-            onClick={() => navigate("/part-d")}
+            onClick={()=>navigate("/part-d")}
             className="mt-6 bg-[#1f2f3f] text-white px-10 py-3 rounded-lg"
           >
             Next
           </button>
+
         )}
 
       </div>
+
     </div>
+
   );
+
 };
 
 export default PartC;

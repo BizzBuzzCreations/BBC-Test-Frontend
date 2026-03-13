@@ -1,134 +1,164 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const PartA = () => {
-  const navigate = useNavigate();
-  const mediaRecorderRef = useRef(null);
 
-  const [showRecordBtn, setShowRecordBtn] = useState(false);
-  const [isRecording, setIsRecording] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(15);
-  const [showComplete, setShowComplete] = useState(false);
-  const [showNext, setShowNext] = useState(false);
+  const navigate = useNavigate();
+
+  const [showInput, setShowInput] = useState(false);
+  const [answer, setAnswer] = useState("");
+  const [timeLeft, setTimeLeft] = useState(10);
+  const [timerStarted, setTimerStarted] = useState(false);
+  const [timeUp, setTimeUp] = useState(false);
+
+  const [isCorrect,setIsCorrect] = useState(false);
+
+  
+  const correctAnswers = ["closing stage","closing"];
+
+
 
   useEffect(() => {
+
     window.speechSynthesis.cancel();
 
-    const firstSpeech = new SpeechSynthesisUtterance(
-      "Part-A. Listen to the question. Answer the question with one word or a few words."
+    const intro = new SpeechSynthesisUtterance(
+      "Part A. Listen to the question. Answer the question with one word or a few words."
     );
 
-    firstSpeech.rate = 0.9;
+    intro.rate = 0.9;
 
-    firstSpeech.onend = () => {
+    intro.onend = () => {
+
       setTimeout(() => {
-        const secondSpeech = new SpeechSynthesisUtterance(
-          "And your question is: what would a person use to open a locked door?"
+
+        const question = new SpeechSynthesisUtterance(
+          "What is the final stage of the sales process where the deal is completed called?"
         );
 
-        secondSpeech.rate = 0.9;
+        question.rate = 0.9;
 
-        secondSpeech.onend = () => {
-          setShowRecordBtn(true);
+        question.onend = () => {
+          setShowInput(true);
         };
 
-        window.speechSynthesis.speak(secondSpeech);
+        window.speechSynthesis.speak(question);
+
       }, 1000);
+
     };
 
-    window.speechSynthesis.speak(firstSpeech);
+    window.speechSynthesis.speak(intro);
 
-    return () => {
-      window.speechSynthesis.cancel();
-    };
+    return () => window.speechSynthesis.cancel();
+
   }, []);
 
-  // Timer logic
+
+
+
   useEffect(() => {
+
     let timer;
 
-    if (isRecording && timeLeft > 0) {
-      timer = setTimeout(() => setTimeLeft((prev) => prev - 1), 1000);
+    if (timerStarted && timeLeft > 0) {
+
+      timer = setTimeout(() => {
+        setTimeLeft((prev) => prev - 1);
+      }, 1000);
+
     }
 
-    if (timeLeft === 0 && isRecording) {
-      stopRecording();
-      navigate("/part-b-example");   // ✅ Correct redirect
+    if (timeLeft === 0 && timerStarted) {
+
+      setTimeUp(true);
+
+      const userAnswer = answer.trim().toLowerCase();
+
+      const isAnswerCorrect = correctAnswers.includes(userAnswer);
+
+      setIsCorrect(isAnswerCorrect);
+      
+      console.log("User Answer:", userAnswer);
+      console.log("Correct:", isAnswerCorrect);
+
     }
 
     return () => clearTimeout(timer);
-  }, [timeLeft, isRecording, navigate]);
 
-  const startRecording = async () => {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const mediaRecorder = new MediaRecorder(stream);
-    mediaRecorderRef.current = mediaRecorder;
+  }, [timerStarted,timeLeft]);
 
-    mediaRecorder.start();
-    setIsRecording(true);
-    setShowComplete(true);
+
+
+
+  const handleTyping = (e) => {
+
+    setAnswer(e.target.value);
+
+    if (!timerStarted) {
+      setTimerStarted(true);
+    }
+
   };
 
-  const stopRecording = () => {
-    mediaRecorderRef.current?.stop();
-    setIsRecording(false);
-  };
 
-  const handleComplete = () => {
-    stopRecording();
-    setShowNext(true);
-  };
+
 
   return (
-    <div className="flex-1 flex items-center justify-center bg-[#cfcbd1]">
-      <div className="bg-[#e9e9eb] w-[850px] rounded-2xl shadow-md p-14 text-center">
 
-        <h1 className="text-3xl font-bold mb-6">
-          Part A
+    <div className="min-h-screen w-full bg-[#cfcbd1] flex items-center justify-center">
+
+      <div className="w-full max-w-4xl bg-[#e9e9eb] rounded-2xl shadow-lg p-12 text-center">
+
+        <h1 className="text-4xl font-bold mb-6">
+          Part A: Give a short answer to the question
         </h1>
 
-        <p className="text-lg">
+        <p className="text-lg mb-10">
           Listen to the question. Answer the question with one word or a few words.
         </p>
 
-        {showRecordBtn && !isRecording && !showNext && (
-          <button
-            onClick={startRecording}
-            className="mt-10 bg-[#1f2f3f] text-white px-10 py-3 rounded-lg hover:opacity-90 transition"
-          >
-            Record Answer
-          </button>
-        )}
 
-        {isRecording && (
-          <div className="mt-6">
-            <p className="text-red-600 font-semibold text-xl">
+        {showInput && (
+
+          <>
+
+            <input
+              type="text"
+              value={answer}
+              onChange={handleTyping}
+              disabled={timeUp}
+              placeholder="Type your answer here..."
+              className="w-[70%] border border-gray-400 rounded-lg px-4 py-3 text-lg outline-none"
+            />
+
+
+            <p className="mt-5 text-red-600 text-xl font-semibold">
               Time Left: {timeLeft}s
             </p>
-          </div>
-        )}
 
-        {showComplete && !showNext && (
-          <button
-            onClick={handleComplete}
-            className="mt-6 bg-[#1f2f3f] text-white px-8 py-2 rounded-lg hover:opacity-90 transition"
-          >
-            Complete
-          </button>
-        )}
 
-        {showNext && (
-          <button
-            onClick={() => navigate("/part-b-example")}
-            className="mt-6 bg-[#1f2f3f] text-white px-10 py-3 rounded-lg hover:opacity-90 transition"
-          >
-            Next
-          </button>
+            {timeUp && (
+
+              <button
+                onClick={() => navigate("/part-b")}
+                className="mt-8 bg-[#1f2f3f] text-white px-10 py-3 rounded-lg hover:opacity-90 transition"
+              >
+                Next
+              </button>
+
+            )}
+
+          </>
+
         )}
 
       </div>
+
     </div>
+
   );
+
 };
 
 export default PartA;

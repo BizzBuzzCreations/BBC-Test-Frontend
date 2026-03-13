@@ -2,152 +2,325 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const PartF = () => {
-  const navigate = useNavigate();
-  const hasStartedRef = useRef(false);
 
-  const questions = [
-    "Do you think social media has a positive or negative impact on society?",
-    "Do you believe technology makes people more connected or more isolated?"
-  ];
+const navigate = useNavigate();
+const audioRef = useRef(null);
 
-  const [questionIndex, setQuestionIndex] = useState(0);
-  const [answer, setAnswer] = useState("");
-  const [timeLeft, setTimeLeft] = useState(30);
-  const [timerStarted, setTimerStarted] = useState(false);
-  const [typingDisabled, setTypingDisabled] = useState(true);
-  const [showNext, setShowNext] = useState(false);
-  const [showSubmit, setShowSubmit] = useState(false);
+const recognitionRef = useRef(null);
+const timerRef = useRef(null);
+const transcriptRef = useRef("");
+const hasSpokenIntroRef = useRef(false);
 
-  
-  useEffect(() => {
-    if (hasStartedRef.current) return;
-    hasStartedRef.current = true;
+const questions = [
+"Why did Chris Gardner decide to become a stockbroker?",
+"What major challenges did Chris Gardner face during his internship at Dean Witter Reynolds?",
+"What important life lesson did Chris Gardner teach his son during their difficult times?"
+];
 
-    window.speechSynthesis.cancel();
+const [audioPlayed,setAudioPlayed] = useState(false);
+const [showAudio,setShowAudio] = useState(false);
 
-    const intro = new SpeechSynthesisUtterance(
-      "Part F. Give your opinion. Listen to a question and give your opinions or ideas. Answer the question with as much detail as you can."
-    );
+const [questionIndex,setQuestionIndex] = useState(-1);
 
-    intro.rate = 0.9;
+const [showRecordBtn,setShowRecordBtn] = useState(false);
+const [isRecording,setIsRecording] = useState(false);
 
-    intro.onend = () => {
-      setTimeout(() => {
-        speakQuestion(0);
-      }, 1000);
-    };
+const [timeLeft,setTimeLeft] = useState(15);
 
-    window.speechSynthesis.speak(intro);
+const [liveTranscript,setLiveTranscript] = useState("");
 
-    return () => {
-      window.speechSynthesis.cancel();
-    };
-  }, []);
+const [showNextQuestionBtn,setShowNextQuestionBtn] = useState(false);
+const [showNextPageBtn,setShowNextPageBtn] = useState(false);
 
-  const speakQuestion = (index) => {
-    const speech = new SpeechSynthesisUtterance(questions[index]);
 
-    speech.rate = 0.9;
+useEffect(()=>{
 
-    speech.onend = () => {
-      setTypingDisabled(false);
-    };
+window.speechSynthesis.cancel();
 
-    window.speechSynthesis.speak(speech);
-  };
+if(hasSpokenIntroRef.current) return;
+hasSpokenIntroRef.current = true;
 
-  
-  useEffect(() => {
-    let timer;
+const intro = new SpeechSynthesisUtterance(
+"Part F – Answer the questions about a passage."
+);
 
-    if (timerStarted && timeLeft > 0) {
-      timer = setTimeout(() => setTimeLeft((prev) => prev - 1), 1000);
-    }
+intro.rate = 0.9;
 
-    if (timeLeft === 0 && timerStarted) {
-      setTypingDisabled(true);
-      setTimerStarted(false);
+intro.onend = ()=>{
+setTimeout(()=>{
+setShowAudio(true);
+},1000);
+};
 
-      if (questionIndex === 0) {
-        setShowNext(true);
-      } else {
-        setShowSubmit(true);
-      }
-    }
+setTimeout(()=>{
+window.speechSynthesis.speak(intro);
+},500);
 
-    return () => clearTimeout(timer);
-  }, [timeLeft, timerStarted, questionIndex]);
+return ()=>window.speechSynthesis.cancel();
 
-  const handleTyping = (e) => {
-    if (!timerStarted) {
-      setTimerStarted(true);
-    }
-    setAnswer(e.target.value);
-  };
+},[]);
 
-  const handleNext = () => {
-    setQuestionIndex(1);
-    setAnswer("");
-    setTimeLeft(30);
-    setTypingDisabled(true);
-    setShowNext(false);
 
-    speakQuestion(1);
-  };
+const handleAudioEnd = ()=>{
 
-  const handleSubmit = () => {
-    navigate("/completion");
-  };
+setAudioPlayed(true);
 
-  return (
-    <div className="flex-1 flex items-center justify-center bg-[#cfcbd1]">
-      <div className="bg-[#e9e9eb] w-[900px] rounded-2xl shadow-md p-12 text-center">
+setTimeout(()=>{
+askQuestion(0);
+},1000);
 
-        <h1 className="text-3xl font-bold mb-4">
-          Part F: Give your opinion
-        </h1>
+};
 
-        <p className="mb-6">
-          Listen to a question and give your opinions or ideas.
-          Answer the question with as much detail as you can.
-        </p>
 
-        <div className="text-lg font-semibold mb-4">
-          ⏱ {timeLeft} sec
-        </div>
+const askQuestion = (index)=>{
 
-        <p className="text-lg mb-6">
-          {questions[questionIndex]}
-        </p>
+window.speechSynthesis.cancel();
 
-        <textarea
-          value={answer}
-          onChange={handleTyping}
-          disabled={typingDisabled}
-          className="w-full h-40 p-4 rounded-lg border border-gray-400"
-        />
+setQuestionIndex(index);
+setLiveTranscript("");
+transcriptRef.current="";
+setShowRecordBtn(false);
+setShowNextQuestionBtn(false);
 
-        {showNext && (
-          <button
-            onClick={handleNext}
-            className="mt-6 bg-[#1f2f3f] text-white px-8 py-3 rounded-lg"
-          >
-            Next
-          </button>
-        )}
+const speech = new SpeechSynthesisUtterance(questions[index]);
 
-        {showSubmit && (
-          <button
-            onClick={handleSubmit}
-            className="mt-6 bg-[#1f2f3f] text-white px-8 py-3 rounded-lg"
-          >
-            Submit
-          </button>
-        )}
+speech.rate = 0.9;
 
-      </div>
-    </div>
-  );
+speech.onend = ()=>{
+setShowRecordBtn(true);
+};
+
+window.speechSynthesis.speak(speech);
+
+};
+
+
+const startTimer = ()=>{
+
+setTimeLeft(15);
+
+timerRef.current=setInterval(()=>{
+
+setTimeLeft(prev=>{
+
+if(prev<=1){
+
+stopRecording();
+return 0;
+
+}
+
+return prev-1;
+
+});
+
+},1000);
+
+};
+
+
+const startRecording = ()=>{
+
+const SpeechRecognition =
+window.SpeechRecognition || window.webkitSpeechRecognition;
+
+if(!SpeechRecognition){
+alert("Speech recognition not supported");
+return;
+}
+
+const recognition = new SpeechRecognition();
+
+recognition.lang="en-US";
+recognition.interimResults=true;
+recognition.continuous=true;
+
+recognition.onresult=(event)=>{
+
+let interim="";
+let final="";
+
+for(let i=event.resultIndex;i<event.results.length;i++){
+
+const res=event.results[i];
+
+if(res.isFinal){
+final+=res[0].transcript+" ";
+}else{
+interim+=res[0].transcript+" ";
+}
+
+}
+
+if(final){
+transcriptRef.current+=final;
+}
+
+setLiveTranscript((transcriptRef.current+interim).trim());
+
+};
+
+recognitionRef.current=recognition;
+
+recognition.start();
+
+setIsRecording(true);
+setShowRecordBtn(false);
+
+startTimer();
+
+};
+
+
+const stopRecording = ()=>{
+
+clearInterval(timerRef.current);
+
+recognitionRef.current?.stop();
+
+setIsRecording(false);
+
+// IF MORE QUESTIONS LEFT
+if(questionIndex < questions.length-1){
+
+setShowNextQuestionBtn(true);
+
+}else{
+
+// LAST QUESTION FINISHED
+setQuestionIndex(-1);   // hide question
+setShowNextPageBtn(true);
+
+}
+
+};
+
+
+const goToNextQuestion = ()=>{
+
+const nextIndex = questionIndex + 1;
+
+askQuestion(nextIndex);
+
+};
+
+
+return(
+
+<div className="min-h-screen flex items-center justify-center bg-[#cfcbd1] px-4">
+
+<div className="bg-[#e9e9eb] w-full max-w-3xl rounded-2xl shadow-lg p-10 text-center">
+
+<h1 className="text-3xl font-bold mb-6">
+Part F: Answer the questions verbally about a passage
+</h1>
+
+<p className="mb-8 text-lg">
+Listen to the passage and answer the following questions verbally.
+</p>
+
+
+{showAudio &&(
+
+<div className="mb-8">
+
+<audio
+ref={audioRef}
+src="/audio/Part-F-Audio.mp3"
+controls
+controlsList="nodownload noplaybackrate"
+onEnded={handleAudioEnd}
+onPlay={()=>{
+
+if(audioPlayed){
+audioRef.current.pause();
+audioRef.current.currentTime=0;
+}
+
+}}
+className="mx-auto"
+/>
+
+<p className="text-gray-600 mt-3">
+Please listen carefully. You can play the audio only once.
+</p>
+
+</div>
+
+)}
+
+
+{questionIndex>=0 &&(
+
+<div className="mt-6">
+
+<p className="text-xl font-semibold mb-4">
+{questions[questionIndex]}
+</p>
+
+</div>
+
+)}
+
+
+{showRecordBtn && !isRecording &&(
+
+<button
+onClick={startRecording}
+className="mt-6 bg-[#1f2f3f] text-white px-10 py-3 rounded-lg hover:opacity-90"
+>
+Record Answer
+</button>
+
+)}
+
+
+{isRecording &&(
+
+<div className="mt-6">
+
+<p className="text-red-600 text-lg font-semibold">
+Time Left: {timeLeft} sec
+</p>
+
+<p className="mt-4 bg-gray-100 p-3 rounded text-sm min-h-[80px]">
+{liveTranscript || "Listening..."}
+</p>
+
+</div>
+
+)}
+
+
+{showNextQuestionBtn &&(
+
+<button
+onClick={goToNextQuestion}
+className="mt-8 bg-[#1f2f3f] text-white px-10 py-3 rounded-lg hover:opacity-90"
+>
+Next Question
+</button>
+
+)}
+
+
+{showNextPageBtn &&(
+
+<button
+onClick={()=>navigate("/part-g")}
+className="mt-10 bg-[#1f2f3f] text-white px-10 py-3 rounded-lg hover:opacity-90"
+>
+Next
+</button>
+
+)}
+
+</div>
+
+</div>
+
+);
+
 };
 
 export default PartF;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+/* import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const PartCExample = () => {
@@ -13,9 +13,9 @@ const PartCExample = () => {
     Listen to two people have a conversation.
     Then answer a question about the conversation.
     William: What time should we leave for the airport?
-    John: The flight is at 10, so we should leave at 7.
-    William: Yes, that sounds right. I will call for a taxi soon.
-    Question: What time are they leaving for the airport?
+    John: let's see... the flight is at 10, so we should leave at 7.
+    William: Yes, that sounds right. I'll call for a taxi soon.
+    So the Question for you is: at What time are they leaving for the airport?
     You say: seven. Or at seven o clock.
     `;
 
@@ -38,7 +38,7 @@ const PartCExample = () => {
       <div className="bg-[#e9e9eb] w-[900px] rounded-2xl shadow-md p-12">
 
         <h1 className="text-3xl font-bold text-center mb-6">
-          Example for Part C
+          Example for Part C :
         </h1>
 
         <p className="text-lg mb-4 text-center">
@@ -51,13 +51,13 @@ const PartCExample = () => {
         </p>
 
         <div className="bg-[#e6b97a] rounded-2xl p-6 mb-6 text-lg leading-8">
-          <p><span className="font-bold">William says:</span><br/>
+          <p><span className="font-bold">William:</span><br/>
           What time should we leave for the airport?</p>
 
           <p className="mt-4"><span className="font-bold">John reply:</span><br/>
-          The flight is at 10, so we should leave at 7.</p>
+          let's see... the flight is at 10, so we should leave at 7.</p>
 
-          <p className="mt-4"><span className="font-bold">William says:</span><br/>
+          <p className="mt-4"><span className="font-bold">William:</span><br/>
           Yes, that sounds right. I'll call for a taxi soon.</p>
 
           <p className="mt-4"><span className="font-bold">Question:</span><br/>
@@ -90,4 +90,4 @@ const PartCExample = () => {
   );
 };
 
-export default PartCExample;
+export default PartCExample; */
