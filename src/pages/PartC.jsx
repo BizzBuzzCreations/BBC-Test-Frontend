@@ -20,14 +20,13 @@ const PartC = () => {
 
   const [results,setResults] = useState([]);
 
-
   const questions = [
     "What is Anna Greig’s address?",
     "What is Anna Greig’s nationality?",
     "What is the serial number of the computer?",
     "What was the material of the Claude Frieder shoulder bag?"
   ];
- 
+
   const correctAnswers = [
     ["4 ellendale street","4 ellendale st"],
     ["grenadian nationality","grenadian"],
@@ -42,6 +41,35 @@ const PartC = () => {
       .replace(/[.,’'--]/g," ")
       .replace(/\s+/g," ")
       .trim();
+  };
+
+
+  
+  const sendMarksToBackend = async (marks)=>{
+
+    try{
+
+      const res = await fetch("http://localhost:5000/api/save-result",{
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+          section:"PartC",
+          marks:marks
+        })
+      });
+
+      const data = await res.json();
+
+      console.log("Backend Response:",data);
+
+    }catch(err){
+
+      console.log("Error sending marks",err);
+
+    }
+
   };
 
 
@@ -62,7 +90,6 @@ const PartC = () => {
 
 
 
-
   const handleAudioEnd = ()=>{
 
     setAudioPlayed(true);
@@ -78,7 +105,6 @@ const PartC = () => {
 
 
 
-
   const speakQuestion = (index)=>{
 
     const speech = new SpeechSynthesisUtterance(questions[index]);
@@ -88,7 +114,6 @@ const PartC = () => {
     window.speechSynthesis.speak(speech);
 
   };
-
 
 
 
@@ -107,7 +132,9 @@ const PartC = () => {
 
       const isCorrect = acceptableAnswers.includes(userAnswer);
 
-      setResults(prev => [...prev,isCorrect]);
+      const updatedResults = [...results,isCorrect];
+
+      setResults(updatedResults);
 
       console.log("Question:",currentQuestion+1);
       console.log("User Answer:",userAnswer);
@@ -118,6 +145,16 @@ const PartC = () => {
         setShowNextQuestion(true);
 
       }else{
+
+        // ✅ calculate total marks
+        const correctCount = updatedResults.filter(r => r).length;
+
+        const totalMarks = correctCount * 2.5;
+
+        console.log("Total Marks:",totalMarks);
+
+        
+        sendMarksToBackend(totalMarks);
 
         setShowFinalNext(true);
 
@@ -137,7 +174,6 @@ const PartC = () => {
 
 
 
-
   const handleTyping = (e)=>{
 
     setAnswer(e.target.value);
@@ -147,7 +183,6 @@ const PartC = () => {
     }
 
   };
-
 
 
 
@@ -167,7 +202,6 @@ const PartC = () => {
 
 
 
-
   return(
 
     <div className="min-h-screen flex items-center justify-center bg-[#cfcbd1] px-4">
@@ -181,7 +215,6 @@ const PartC = () => {
         <p className="text-lg mb-6">
           Listen to 2 people have a conversation. Then answer 4 questions about the conversation.
         </p>
-
 
         <div className="mb-8">
 
@@ -219,7 +252,6 @@ const PartC = () => {
               {questions[currentQuestion]}
             </p>
 
-
             <input
               type="text"
               value={answer}
@@ -228,7 +260,6 @@ const PartC = () => {
               placeholder="Type your answer..."
               className="w-full p-3 border rounded-lg disabled:bg-gray-400"
             />
-
 
             {timerStarted && (
 
@@ -243,7 +274,6 @@ const PartC = () => {
         )}
 
 
-
         {showNextQuestion && (
 
           <button
@@ -254,7 +284,6 @@ const PartC = () => {
           </button>
 
         )}
-
 
 
         {showFinalNext && (

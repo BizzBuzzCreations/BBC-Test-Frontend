@@ -13,7 +13,7 @@ const PartE = () => {
   const [showNext, setShowNext] = useState(false);
 
   const [results,setResults] = useState({});
- 
+
   const correctAnswers = {
     1: ["May I ask why you feel that way?"],
     2: ["Cross-selling"],
@@ -21,6 +21,41 @@ const PartE = () => {
     4: ["₹130.10"],
     5: ["Upselling"]
   };
+
+
+
+  
+  const sendMarksToBackend = async (marks) => {
+
+    try {
+
+      const res = await fetch("http://localhost:5000/api/save-result", {
+
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+          section: "PartE",
+          marks: marks
+        })
+
+      });
+
+      const data = await res.json();
+
+      console.log("Backend Response:", data);
+
+    } catch (err) {
+
+      console.log("Error sending marks:", err);
+
+    }
+
+  };
+
 
 
   useEffect(() => {
@@ -137,6 +172,8 @@ const PartE = () => {
 
     const resultObj = {};
 
+    let totalMarks = 0;
+
     questions.forEach(q => {
 
       const userAnswer = answers[q.id];
@@ -146,15 +183,25 @@ const PartE = () => {
 
       resultObj[q.id] = isCorrect;
 
+      if(isCorrect){
+        totalMarks += 1;
+      }
+
       console.log(`Question ${q.id}`);
       console.log("User:", userAnswer);
       console.log("Correct:", isCorrect);
 
     });
 
+    console.log("Total Marks:", totalMarks);
+
     setResults(resultObj);
 
+    
+    sendMarksToBackend(totalMarks);
+
   };
+
 
 
   const formatTime = (seconds) => {

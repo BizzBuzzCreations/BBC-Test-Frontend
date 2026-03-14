@@ -11,11 +11,35 @@ const PartA = () => {
   const [timerStarted, setTimerStarted] = useState(false);
   const [timeUp, setTimeUp] = useState(false);
 
-  const [isCorrect,setIsCorrect] = useState(false);
+  const [isCorrect, setIsCorrect] = useState(false);
 
-  
-  const correctAnswers = ["closing stage","closing"];
+  const correctAnswers = ["closing stage", "closing"];
 
+  // ✅ Backend API call
+  const sendMarksToBackend = async (marks) => {
+
+    try {
+
+      const response = await fetch("http://localhost:5000/api/save-result", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          section: "PartA",
+          marks: marks,
+        }),
+      });
+
+      const data = await response.json();
+
+      console.log("Backend Response:", data);
+
+    } catch (error) {
+      console.error("Error sending marks:", error);
+    }
+
+  };
 
 
   useEffect(() => {
@@ -78,15 +102,21 @@ const PartA = () => {
       const isAnswerCorrect = correctAnswers.includes(userAnswer);
 
       setIsCorrect(isAnswerCorrect);
-      
+
+      const marks = isAnswerCorrect ? 5 : 0;
+
+      // ✅ Send marks to backend
+      sendMarksToBackend(marks);
+
       console.log("User Answer:", userAnswer);
       console.log("Correct:", isAnswerCorrect);
+      console.log("Marks Sent:", marks);
 
     }
 
     return () => clearTimeout(timer);
 
-  }, [timerStarted,timeLeft]);
+  }, [timerStarted, timeLeft]);
 
 
 
