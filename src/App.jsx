@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-
+import { useState, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
@@ -16,40 +16,56 @@ import PartD from "./pages/PartD";
 import PartE from "./pages/PartE";
 import PartF from "./pages/PartF";
 import PartG from "./pages/PartG";
-
 import Completion from "./pages/Completion";
+import { ToastContainer, toast, Bounce } from "react-toastify";
 
 function App() {
   return (
-    <Router>
-      <div className="min-h-screen flex flex-col">
+    <>
+      <Router>
+        <div className="min-h-screen flex flex-col">
+          <Navbar />
 
-        <Navbar />
+          <div className="flex-1">
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/dashboard" element={<Register />} />
 
-        <div className="flex-1">
-          <Routes>
-            <Route path="/" element={<Register />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/overview" element={<Overview />} />
+              <Route path="/speaking-tips" element={<SpeakingTips />} />
+              <Route
+                path="/sample-speech-test"
+                element={<SampleSpeechTest />}
+              />
+              <Route path="/part-a" element={<PartA />} />
+              <Route path="/part-b" element={<PartB />} />
+              <Route path="/part-c" element={<PartC />} />
+              <Route path="/part-d" element={<PartD />} />
+              <Route path="/part-e" element={<PartE />} />
+              <Route path="/part-f" element={<PartF />} />
+              <Route path="/part-g" element={<PartG />} />
+              <Route path="/completion" element={<Completion />} />
+            </Routes>
+          </div>
 
-            <Route path="/overview" element={<Overview />} />
-            <Route path="/speaking-tips" element={<SpeakingTips />} />
-            <Route path="/sample-speech-test" element={<SampleSpeechTest />} />
-            <Route path="/part-a" element={<PartA />} />
-            <Route path="/part-b" element={<PartB />} />
-            <Route path="/part-c" element={<PartC />} />
-            <Route path="/part-d" element={<PartD />} />
-            <Route path="/part-e" element={<PartE />} />
-            <Route path="/part-f" element={<PartF />} />
-            <Route path="/part-g" element={<PartG />} />  
-            <Route path="/completion" element={<Completion />} />
-          </Routes>
+          <Footer />
         </div>
-
-        <Footer />
-
-      </div>
-    </Router>
+      </Router>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
+    </>
   );
 }
 

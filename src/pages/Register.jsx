@@ -1,39 +1,72 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast, Bounce } from "react-toastify";
 
 function Register() {
-
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     username: "",
     email: "",
-    password: ""
+    password: "",
   });
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
-  const handleNext = (e) => {
+  const handleNext = async (e) => {
     e.preventDefault();
-    navigate("/login");
+    try {
+      const res = await axios.post(
+        "http://localhost:8080/api/auth/signup",
+        {
+          ...formData,
+        },
+        { withCredentials: true },
+      );
+      const data = res?.data;
+      if (data?.success) {
+        toast.success(data?.message, {
+          position: "top-right",
+        });
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 500);
+      } else {
+        toast.error(data?.message, {
+          position: "top-right",
+        });
+      }
+    } catch (error) {
+      console.error("Registration error:", error);
+      toast.error("Registration failed. Please try again.", {
+        position: "top-right",
+      });
+    }
+  };
+
+  const logout = async () => {
+    await axios.post(
+      "http://localhost:8080/api/auth/logout",
+      {},
+      { withCredentials: true },
+    );
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
-
       <div className="bg-white p-8 rounded-2xl shadow-lg w-96">
-
+        <button onClick={logout}>logout</button>
         <h2 className="text-2xl font-bold text-center mb-6">
           Create your Account for BBC-Test
         </h2>
 
         <form onSubmit={handleNext} className="space-y-4">
-
           <input
             type="text"
             name="username"
@@ -65,7 +98,6 @@ function Register() {
           />
 
           <div className="flex gap-3 pt-2">
-
             <button
               type="submit"
               className="flex-1 bg-[#1f2f3f] text-white py-2 rounded-lg transition"
@@ -80,13 +112,9 @@ function Register() {
             >
               Login
             </button>
-
           </div>
-
         </form>
-
       </div>
-
     </div>
   );
 }

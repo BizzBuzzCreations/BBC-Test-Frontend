@@ -103,7 +103,7 @@ const PartA = () => {
 
       setIsCorrect(isAnswerCorrect);
 
-      const marks = isAnswerCorrect ? 5 : 0;
+      const marks = isAnswerCorrect ? 10 : 0;
 
       // ✅ Send marks to backend
       sendMarksToBackend(marks);
