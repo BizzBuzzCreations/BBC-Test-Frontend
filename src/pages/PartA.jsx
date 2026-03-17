@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const PartA = () => {
-
+  
   const navigate = useNavigate();
 
   const [showInput, setShowInput] = useState(false);
@@ -18,27 +20,25 @@ const PartA = () => {
   // ✅ Backend API call
   const sendMarksToBackend = async (marks) => {
 
-    try {
-
-      const response = await fetch("http://localhost:5000/api/save-result", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+     try {
+      const res = await axios.post(
+        "https://8mbq32t9-8080.inc1.devtunnels.ms/api/auth/add-marks",
+        {
+        testId: "Part-A", 
+        marks
         },
-        body: JSON.stringify({
-          section: "PartA",
-          marks: marks,
-        }),
-      });
+        { withCredentials: true }
+      );
 
-      const data = await response.json();
+      const data = res?.data;
 
-      console.log("Backend Response:", data);
-
+     
     } catch (error) {
-      console.error("Error sending marks:", error);
+      console.error("Login error:", error);
+      toast.error("Login failed. Please try again.", {
+        position: "top-right",
+      });
     }
-
   };
 
 

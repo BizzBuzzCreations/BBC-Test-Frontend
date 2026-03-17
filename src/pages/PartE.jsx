@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const PartE = () => {
 
@@ -22,31 +23,18 @@ const PartE = () => {
     5: ["Upselling"]
   };
 
-
-
   
   const sendMarksToBackend = async (marks) => {
 
     try {
-
-      const res = await fetch("http://localhost:5000/api/save-result", {
-
-        method: "POST",
-
-        headers: {
-          "Content-Type": "application/json"
+      const res = await axios.post(
+        "https://8mbq32t9-8080.inc1.devtunnels.ms/api/auth/add-marks",
+        {
+        testId: "Part-E", 
+        marks
         },
-
-        body: JSON.stringify({
-          section: "PartE",
-          marks: marks
-        })
-
-      });
-
-      const data = await res.json();
-
-      console.log("Backend Response:", data);
+        { withCredentials: true }
+      );
 
     } catch (err) {
 
@@ -55,8 +43,6 @@ const PartE = () => {
     }
 
   };
-
-
 
   useEffect(() => {
 
@@ -86,8 +72,6 @@ const PartE = () => {
     window.speechSynthesis.speak(intro);
 
   }, []);
-
-
 
   const questions = [
 
@@ -129,9 +113,8 @@ const PartE = () => {
   ];
 
 
-
   useEffect(() => {
-
+     
     if (!timerStarted) return;
 
     if (timeLeft === 0) {
@@ -162,8 +145,6 @@ const PartE = () => {
 
   };
 
-
-
   const handleComplete = () => {
 
     setIsCompleted(true);
@@ -184,7 +165,7 @@ const PartE = () => {
       resultObj[q.id] = isCorrect;
 
       if(isCorrect){
-        totalMarks += 1;
+        totalMarks += 2;
       }
 
       console.log(`Question ${q.id}`);
@@ -201,7 +182,6 @@ const PartE = () => {
     sendMarksToBackend(totalMarks);
 
   };
-
 
 
   const formatTime = (seconds) => {
@@ -236,8 +216,6 @@ const PartE = () => {
           </p>
 
         )}
-
-
 
         <div className="space-y-8">
 
@@ -284,8 +262,6 @@ const PartE = () => {
 
         </div>
 
-
-
         {!isCompleted && (
 
           <div className="text-center mt-10">
@@ -300,8 +276,6 @@ const PartE = () => {
           </div>
 
         )}
-
-
 
         {showNext && (
 

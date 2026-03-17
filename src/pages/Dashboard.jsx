@@ -25,7 +25,7 @@ const Dashboard = () => {
     const verifyCookie = async () => {
       try {
         const { data } = await axios.post(
-          "http://localhost:8080/api/auth",
+          "https://8mbq32t9-8080.inc1.devtunnels.ms/api/auth",
           {},
           { withCredentials: true },
         );
@@ -34,7 +34,7 @@ const Dashboard = () => {
           setUser(user);
         } else {
           await axios.post(
-            "http://localhost:8080/api/auth/logout",
+            "https://8mbq32t9-8080.inc1.devtunnels.ms/api/auth/logout",
             {},
             { withCredentials: true },
           );

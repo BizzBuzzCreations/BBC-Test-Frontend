@@ -180,15 +180,13 @@ recognitionRef.current?.stop();
 
 setIsRecording(false);
 
-// IF MORE QUESTIONS LEFT
 if(questionIndex < questions.length-1){
 
 setShowNextQuestionBtn(true);
 
 }else{
 
-// LAST QUESTION FINISHED
-setQuestionIndex(-1);   // hide question
+setQuestionIndex(-1);  
 setShowNextPageBtn(true);
 
 }
