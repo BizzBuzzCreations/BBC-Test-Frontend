@@ -32,7 +32,10 @@ const PartA = () => {
 
       console.log("Backend Response:", data);
     } catch (error) {
-      console.error("Error sending marks:", error);
+      console.error("Login error:", error);
+      toast.error("Login failed. Please try again.", {
+        position: "top-right",
+      });
     }
   };
 

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const PartC = () => {
 
@@ -47,22 +48,16 @@ const PartC = () => {
   
   const sendMarksToBackend = async (marks)=>{
 
-    try{
-
-      const res = await fetch("http://localhost:5000/api/save-result",{
-        method:"POST",
-        headers:{
-          "Content-Type":"application/json"
+    try {
+      const res = await axios.post(
+        "https://8mbq32t9-8080.inc1.devtunnels.ms/api/auth/add-marks",
+        {
+        testId: "Part-C", 
+        marks
         },
-        body:JSON.stringify({
-          section:"PartC",
-          marks:marks
-        })
-      });
-
-      const data = await res.json();
-
-      console.log("Backend Response:",data);
+        { withCredentials: true }
+      );
+     
 
     }catch(err){
 
@@ -145,8 +140,7 @@ const PartC = () => {
         setShowNextQuestion(true);
 
       }else{
-
-        // ✅ calculate total marks
+        
         const correctCount = updatedResults.filter(r => r).length;
 
         const totalMarks = correctCount * 2.5;

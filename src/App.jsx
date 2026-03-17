@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { useState, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
@@ -17,7 +16,8 @@ import PartE from "./pages/PartE";
 import PartF from "./pages/PartF";
 import PartG from "./pages/PartG";
 import Completion from "./pages/Completion";
-import { ToastContainer, toast, Bounce } from "react-toastify";
+
+import { ToastContainer, Bounce } from "react-toastify";
 
 function App() {
   return (
@@ -28,9 +28,14 @@ function App() {
 
           <div className="flex-1">
             <Routes>
+
               <Route path="/" element={<Dashboard />} />
+
               <Route path="/login" element={<Login />} />
-              <Route path="/dashboard" element={<Register />} />
+
+              <Route path="/register" element={<Register />} />
+
+              <Route path="/dashboard" element={<Dashboard />} />
 
               <Route path="/overview" element={<Overview />} />
               <Route path="/speaking-tips" element={<SpeakingTips />} />
@@ -38,6 +43,7 @@ function App() {
                 path="/sample-speech-test"
                 element={<SampleSpeechTest />}
               />
+
               <Route path="/part-a" element={<PartA />} />
               <Route path="/part-b" element={<PartB />} />
               <Route path="/part-c" element={<PartC />} />
@@ -45,23 +51,19 @@ function App() {
               <Route path="/part-e" element={<PartE />} />
               <Route path="/part-f" element={<PartF />} />
               <Route path="/part-g" element={<PartG />} />
+
               <Route path="/completion" element={<Completion />} />
+
             </Routes>
           </div>
 
           <Footer />
         </div>
       </Router>
+
       <ToastContainer
         position="top-right"
         autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick={false}
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
         theme="light"
         transition={Bounce}
       />
@@ -70,3 +72,4 @@ function App() {
 }
 
 export default App;
+

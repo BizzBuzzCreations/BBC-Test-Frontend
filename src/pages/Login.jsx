@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { toast, Bounce } from "react-toastify";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -13,18 +13,21 @@ const Login = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        "http://localhost:8080/api/auth/login",
+        "https://8mbq32t9-8080.inc1.devtunnels.ms/api/auth/login",
         {
           email,
           password,
         },
-        { withCredentials: true },
+        { withCredentials: true }
       );
+
       const data = res?.data;
+
       if (data?.success) {
         toast.success(data?.message, {
           position: "top-right",
         });
+
         setTimeout(() => {
           navigate("/dashboard");
         }, 500);
@@ -34,11 +37,15 @@ const Login = () => {
         });
       }
     } catch (error) {
-      console.error("Registration error:", error);
-      toast.error("Registration failed. Please try again.", {
+      console.error("Login error:", error);
+      toast.error("Login failed. Please try again.", {
         position: "top-right",
       });
     }
+  };
+
+  const handleRegister = () => {
+    navigate("/register");
   };
 
   return (
@@ -73,6 +80,17 @@ const Login = () => {
           >
             Next
           </button>
+
+          <p className="text-center text-sm text-gray-700">
+            If you don't have an account?{" "}
+            <button
+              type="button"
+              onClick={handleRegister}
+              className="text-blue-600 font-medium hover:underline"
+            >
+              Register
+            </button>
+          </p>
         </form>
       </div>
     </div>

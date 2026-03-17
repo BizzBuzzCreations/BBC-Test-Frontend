@@ -1,7 +1,8 @@
+
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast, Bounce } from "react-toastify";
+import { toast } from "react-toastify";
 
 function Register() {
   const navigate = useNavigate();
@@ -21,19 +22,23 @@ function Register() {
 
   const handleNext = async (e) => {
     e.preventDefault();
+
     try {
       const res = await axios.post(
-        "http://localhost:8080/api/auth/signup",
+        "https://8mbq32t9-8080.inc1.devtunnels.ms/api/auth/signup",
         {
           ...formData,
         },
-        { withCredentials: true },
+        { withCredentials: true }
       );
+
       const data = res?.data;
+
       if (data?.success) {
         toast.success(data?.message, {
           position: "top-right",
         });
+
         setTimeout(() => {
           navigate("/dashboard");
         }, 500);
@@ -52,21 +57,23 @@ function Register() {
 
   const logout = async () => {
     await axios.post(
-      "http://localhost:8080/api/auth/logout",
+      "https://8mbq32t9-8080.inc1.devtunnels.ms/api/auth/logout",
       {},
-      { withCredentials: true },
+      { withCredentials: true }
     );
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-2xl shadow-lg w-96">
-        <button onClick={logout}>logout</button>
+        
+
         <h2 className="text-2xl font-bold text-center mb-6">
           Create your Account for BBC-Test
         </h2>
 
         <form onSubmit={handleNext} className="space-y-4">
+
           <input
             type="text"
             name="username"
@@ -97,22 +104,24 @@ function Register() {
             className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
 
-          <div className="flex gap-3 pt-2">
-            <button
-              type="submit"
-              className="flex-1 bg-[#1f2f3f] text-white py-2 rounded-lg transition"
-            >
-              Next
-            </button>
+          <button
+            type="submit"
+            className="w-full bg-[#1f2f3f] text-white py-2 rounded-lg transition hover:opacity-90"
+          >
+            Next
+          </button>
 
+          <p className="text-center mt-3">
+            If you have an account?{" "}
             <button
               type="button"
               onClick={() => navigate("/login")}
-              className="flex-1 bg-gray-200 py-2 rounded-lg hover:bg-gray-300 transition"
+              className="text-blue-600 hover:underline"
             >
               Login
             </button>
-          </div>
+          </p>
+
         </form>
       </div>
     </div>
