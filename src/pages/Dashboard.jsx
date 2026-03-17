@@ -53,7 +53,7 @@ const Dashboard = () => {
       }
     };
     verifyCookie();
-  }, [cookies, user, removeCookie]);
+  }, [cookies, removeCookie]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-200 px-4">
