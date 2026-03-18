@@ -8,7 +8,6 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [cookies, removeCookie] = useCookies([]);
-  console.log(user);
 
   // useEffect(() => {
   //   const name = localStorage.getItem("userName");
@@ -25,7 +24,7 @@ const Dashboard = () => {
     const verifyCookie = async () => {
       try {
         const { data } = await axios.post(
-          "https://8mbq32t9-8080.inc1.devtunnels.ms/api/auth",
+          "https://bbc-backend.bbcfinsrv.com/api/auth",
           {},
           { withCredentials: true },
         );
@@ -34,7 +33,7 @@ const Dashboard = () => {
           setUser(user);
         } else {
           await axios.post(
-            "https://8mbq32t9-8080.inc1.devtunnels.ms/api/auth/logout",
+            "https://bbc-backend.bbcfinsrv.com/api/auth/logout",
             {},
             { withCredentials: true },
           );
@@ -54,6 +53,17 @@ const Dashboard = () => {
     };
     verifyCookie();
   }, [cookies, removeCookie]);
+
+  useEffect(() => {
+    if (!user) return;
+
+    if (user.isDone === true) {
+      toast.error("You have already completed this test", {
+        position: "top-right",
+      });
+      navigate("/completion");
+    }
+  }, [user]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-200 px-4">

@@ -13,12 +13,12 @@ const Login = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        "https://8mbq32t9-8080.inc1.devtunnels.ms/api/auth/login",
+        "https://bbc-backend.bbcfinsrv.com/api/auth/login",
         {
           email,
           password,
         },
-        { withCredentials: true }
+        { withCredentials: true },
       );
 
       const data = res?.data;

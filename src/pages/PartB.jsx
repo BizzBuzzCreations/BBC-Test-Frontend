@@ -29,7 +29,7 @@ const PartB = () => {
   const sendMarksToBackend = async (question, answer) => {
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/auth/ai-marks",
+        "https://bbc-backend.bbcfinsrv.com/api/auth/ai-marks",
         {
           testId: "Part-B",
           question,

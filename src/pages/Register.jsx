@@ -1,4 +1,3 @@
-
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -25,11 +24,11 @@ function Register() {
 
     try {
       const res = await axios.post(
-        "https://8mbq32t9-8080.inc1.devtunnels.ms/api/auth/signup",
+        "https://bbc-backend.bbcfinsrv.com/api/auth/signup",
         {
           ...formData,
         },
-        { withCredentials: true }
+        { withCredentials: true },
       );
 
       const data = res?.data;
@@ -57,23 +56,20 @@ function Register() {
 
   const logout = async () => {
     await axios.post(
-      "https://8mbq32t9-8080.inc1.devtunnels.ms/api/auth/logout",
+      "https://bbc-backend.bbcfinsrv.com/api/auth/logout",
       {},
-      { withCredentials: true }
+      { withCredentials: true },
     );
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-2xl shadow-lg w-96">
-        
-
         <h2 className="text-2xl font-bold text-center mb-6">
           Create your Account for BBC-Test
         </h2>
 
         <form onSubmit={handleNext} className="space-y-4">
-
           <input
             type="text"
             name="username"
@@ -121,7 +117,6 @@ function Register() {
               Login
             </button>
           </p>
-
         </form>
       </div>
     </div>

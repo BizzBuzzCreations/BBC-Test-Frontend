@@ -36,7 +36,7 @@ const PartF = () => {
   const sendMarksToBackend = async (question, answer) => {
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/auth/ai-marks",
+        "https://bbc-backend.bbcfinsrv.com/api/auth/ai-marks",
         {
           testId: "Part-f",
           question,
@@ -113,16 +113,18 @@ const PartF = () => {
 
     timerRef.current = setInterval(() => {
       setTimeLeft((prev) => {
-        if (prev <= 1) {
+        const newTime = prev - 1;
+
+        if (newTime <= 0) {
+          clearInterval(timerRef.current);
           stopRecording();
           return 0;
         }
 
-        return prev - 1;
+        return newTime;
       });
     }, 1000);
   };
-
   const startRecording = () => {
     const SpeechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -183,7 +185,6 @@ const PartF = () => {
     recognitionRef.current?.stop();
 
     setIsRecording(false);
-
     // IF MORE QUESTIONS LEFT
     if (questionIndex < questions.length - 1) {
       setShowNextQuestionBtn(true);
