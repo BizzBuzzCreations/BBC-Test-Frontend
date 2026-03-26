@@ -14,7 +14,7 @@ const PartA = () => {
 
   const [isCorrect, setIsCorrect] = useState(false);
 
-  const correctAnswers = ["closing stage", "closing"];
+  const correctAnswers = ["Communication", "Trust", "creating urge", "confidence", "knowledge of service or product"];
 
   //  Backend API call
   const sendMarksToBackend = async (marks) => {
@@ -51,7 +51,7 @@ const PartA = () => {
     intro.onend = () => {
       setTimeout(() => {
         const question = new SpeechSynthesisUtterance(
-          "What is the final stage of the sales process where the deal is completed called?",
+          "What is the most powerful tool a salesperson can use to influence a customer’s decision?",
         );
 
         question.rate = 0.9;

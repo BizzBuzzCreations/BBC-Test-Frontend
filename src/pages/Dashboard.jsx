@@ -70,7 +70,7 @@ const Dashboard = () => {
       <div className="bg-white max-w-xl w-full rounded-2xl shadow-xl p-10 text-center">
         <h1 className="text-3xl font-bold text-gray-900 mb-6 leading-snug">
           Hello {user?.username || "User"}, Welcome to <br />
-          BBC Test Application
+          BBC-Test Application
         </h1>
 
         <p className="text-gray-600 text-lg mb-10">

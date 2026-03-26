@@ -12,9 +12,9 @@ const PartF = () => {
   const hasSpokenIntroRef = useRef(false);
 
   const questions = [
-    "Why did Chris Gardner decide to become a stockbroker?",
-    "What major challenges did Chris Gardner face during his internship at Dean Witter Reynolds?",
-    "What important life lesson did Chris Gardner teach his son during their difficult times?",
+    "What was the main reason behind Chris Gardner’s financial struggles?",
+    "What led Linda to leave Chris and move away?",
+    "Where did Chris and his son live after being evicted from their apartment?",
   ];
 
   const [audioPlayed, setAudioPlayed] = useState(false);

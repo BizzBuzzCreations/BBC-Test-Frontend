@@ -23,14 +23,14 @@ const PartC = () => {
   const questions = [
     "What is Anna Greig’s address?",
     "What is Anna Greig’s nationality?",
-    "What is the serial number of the computer?",
+    "What was used by the intruder to open the door?",
     "What was the material of the Claude Frieder shoulder bag?",
   ];
 
   const correctAnswers = [
     ["4 ellendale street", "4 ellendale st"],
     ["grenadian nationality", "grenadian"],
-    ["g4168770"],
+    ["Crowbar", "crow bar"],
     ["silver coloured cloth", "silver colored cloth"],
   ];
 

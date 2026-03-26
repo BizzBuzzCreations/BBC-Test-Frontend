@@ -7,7 +7,7 @@ const PartB = () => {
 
   const [showInput, setShowInput] = useState(false);
   const [answer, setAnswer] = useState("");
-  const [timeLeft, setTimeLeft] = useState(15);
+  const [timeLeft, setTimeLeft] = useState(30);
   const [timerStarted, setTimerStarted] = useState(false);
   const [timeUp, setTimeUp] = useState(false);
 

@@ -14,7 +14,7 @@ const Completion = () => {
         </h1>
 
         <p className="text-lg mb-8">
-          Thank you for completing the Versant Alike Test.
+          Thank you for completing the BBC-Test.
         </p>
 
         <p className="text-lg mb-8">
