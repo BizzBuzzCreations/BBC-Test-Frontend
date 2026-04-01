@@ -11,9 +11,7 @@ import SampleSpeechTest from "./pages/SampleSpeechTest";
 import PartA from "./pages/PartA";
 import PartB from "./pages/PartB";
 import PartC from "./pages/PartC";
-import PartD from "./pages/PartD";
 import PartE from "./pages/PartE";
-import PartF from "./pages/PartF";
 import PartG from "./pages/PartG";
 import Completion from "./pages/Completion";
 
@@ -47,9 +45,7 @@ function App() {
               <Route path="/part-a" element={<PartA />} />
               <Route path="/part-b" element={<PartB />} />
               <Route path="/part-c" element={<PartC />} />
-              <Route path="/part-d" element={<PartD />} />
               <Route path="/part-e" element={<PartE />} />
-              <Route path="/part-f" element={<PartF />} />
               <Route path="/part-g" element={<PartG />} />
 
               <Route path="/completion" element={<Completion />} />

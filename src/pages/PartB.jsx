@@ -14,7 +14,7 @@ const PartB = () => {
   const [isCorrect, setIsCorrect] = useState(false);
 
   const correctAnswers = [
-    "good sales is not about forcing a product but about understanding the customers needs",
+    "good sales is not about forcing a product but about understanding the customer's needs",
     "good sales is not about forcing a product but about understanding customer needs",
   ];
 
@@ -50,7 +50,7 @@ const PartB = () => {
     window.speechSynthesis.cancel();
 
     const speech = new SpeechSynthesisUtterance(
-      "Part B. Listen to the sentence and repeat it exactly. Your sentence is: Good sales is not about forcing a product, but about understanding the customer’s needs.",
+      "Part B. Listen to the sentence and repeat it exactly. Your sentence is: good sales is not about forcing a product, but about understanding the customer’s needs.",
     );
 
     speech.rate = 0.9;

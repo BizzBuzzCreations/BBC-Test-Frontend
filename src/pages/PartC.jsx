@@ -30,7 +30,7 @@ const PartC = () => {
   const correctAnswers = [
     ["4 ellendale street", "4 ellendale st"],
     ["grenadian nationality", "grenadian"],
-    ["Crowbar", "crow bar"],
+    ["crowbar", "crow bar"],
     ["silver coloured cloth", "silver colored cloth"],
   ];
 
@@ -222,7 +222,7 @@ const PartC = () => {
 
         {showFinalNext && (
           <button
-            onClick={() => navigate("/part-d")}
+            onClick={() => navigate("/part-e")}
             className="mt-6 bg-[#1f2f3f] text-white px-10 py-3 rounded-lg"
           >
             Next

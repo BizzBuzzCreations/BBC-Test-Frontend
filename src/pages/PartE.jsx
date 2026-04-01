@@ -41,7 +41,7 @@ const PartE = () => {
     window.speechSynthesis.cancel();
 
     const intro = new SpeechSynthesisUtterance(
-      "Section E. Multiple Choice Questions",
+      "Part D. Multiple Choice Questions",
     );
 
     const instruction = new SpeechSynthesisUtterance(
@@ -94,7 +94,7 @@ const PartE = () => {
     {
       id: 4,
       question:
-        "If a person earns ₹27,500 per month and works 7 hours per day, how much does the person earn per hour in the month of February",
+        "If a person earns ₹27,500 per month and works 7 hours per day and 6 days a week, how much does the person earn per hour in the month of February 2026.",
       options: ["₹150.20", "₹145.30", "₹130.10", "₹155.20"],
     },
 
@@ -174,7 +174,7 @@ const PartE = () => {
     <div className="min-h-screen flex items-center justify-center bg-[#cfcbd1] px-4">
       <div className="bg-[#e9e9eb] w-full max-w-4xl rounded-2xl shadow-lg p-10">
         <h1 className="text-3xl font-bold text-center mb-6">
-          Section E: MCQ type Questions
+          Part D: MCQ type Questions
         </h1>
 
         <p className="text-center mb-8 text-lg">
@@ -237,7 +237,7 @@ const PartE = () => {
         {showNext && (
           <div className="text-center mt-8">
             <button
-              onClick={() => navigate("/part-f")}
+              onClick={() => navigate("/part-g")}
               className="bg-[#1f2f3f] text-white px-10 py-3 rounded-lg hover:opacity-90"
             >
               Next

@@ -156,7 +156,7 @@ const PartG = () => {
     if (hasSpokenRef.current) return;
     hasSpokenRef.current = true;
 
-    speak("Part-G : Give your opinion", () => {
+    speak("Part-E : Give your opinion", () => {
       setTimeout(() => {
         setQuestionIndex(0);
 
@@ -170,7 +170,7 @@ const PartG = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#cfcbd1] px-4">
       <div className="bg-[#e9e9eb] w-[750px] max-w-full rounded-xl shadow-lg p-12 text-center">
-        <h1 className="text-3xl font-bold mb-6">Part G : Give your Opinion</h1>
+        <h1 className="text-3xl font-bold mb-6">Part E : Give your Opinion</h1>
 
         {questionIndex !== -1 && (
           <p className="text-xl mb-6">{questions[questionIndex]}</p>

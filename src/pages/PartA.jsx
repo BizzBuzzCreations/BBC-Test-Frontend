@@ -14,7 +14,7 @@ const PartA = () => {
 
   const [isCorrect, setIsCorrect] = useState(false);
 
-  const correctAnswers = ["Communication", "Trust", "creating urge", "confidence", "knowledge of service or product"];
+  const correctAnswers = ["Communication", "communication", "good communication", "Trust", "trust", "creating urge", "confidence", "knowledge of service or product"];
 
   //  Backend API call
   const sendMarksToBackend = async (marks) => {
@@ -81,7 +81,7 @@ const PartA = () => {
     if (timeLeft === 0 && timerStarted) {
       setTimeUp(true);
 
-      const userAnswer = answer.trim().toLowerCase();
+      const userAnswer = answer.trim().toLowerCase()
 
       const isAnswerCorrect = correctAnswers.includes(userAnswer);
 
