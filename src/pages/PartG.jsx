@@ -54,7 +54,7 @@ const PartG = () => {
   const sendMarksToBackend = async (question, answer) => {
     try {
       const response = await axios.post(
-        "https://bbc-backend.bbcfinsrv.com/api/auth/ai-marks",
+        "https://bbc-backend.bizzbuzzcreations.com/api/auth/ai-marks",
         {
           testId: "Part-G",
           question,

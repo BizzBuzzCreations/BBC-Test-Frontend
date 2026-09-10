@@ -24,7 +24,7 @@ const Dashboard = () => {
     const verifyCookie = async () => {
       try {
         const { data } = await axios.post(
-          "https://bbc-backend.bbcfinsrv.com/api/auth",
+          "https://bbc-backend.bizzbuzzcreations.com/api/auth",
           {},
           { withCredentials: true },
         );
@@ -33,7 +33,7 @@ const Dashboard = () => {
           setUser(user);
         } else {
           await axios.post(
-            "https://bbc-backend.bbcfinsrv.com/api/auth/logout",
+            "https://bbc-backend.bizzbuzzcreations.com/api/auth/logout",
             {},
             { withCredentials: true },
           );

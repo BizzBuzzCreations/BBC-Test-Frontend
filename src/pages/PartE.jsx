@@ -25,7 +25,7 @@ const PartE = () => {
   const sendMarksToBackend = async (marks) => {
     try {
       const res = await axios.post(
-        "https://bbc-backend.bbcfinsrv.com/api/auth/add-marks",
+        "https://bbc-backend.bizzbuzzcreations.com/api/auth/add-marks",
         {
           testId: "Part-E",
           marks,

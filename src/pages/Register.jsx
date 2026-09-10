@@ -24,7 +24,7 @@ function Register() {
 
     try {
       const res = await axios.post(
-        "https://bbc-backend.bbcfinsrv.com/api/auth/signup",
+        "https://bbc-backend.bizzbuzzcreations.com/api/auth/signup",
         {
           ...formData,
         },
@@ -56,7 +56,7 @@ function Register() {
 
   const logout = async () => {
     await axios.post(
-      "https://bbc-backend.bbcfinsrv.com/api/auth/logout",
+      "https://bbc-backend.bizzbuzzcreations.com/api/auth/logout",
       {},
       { withCredentials: true },
     );

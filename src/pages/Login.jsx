@@ -13,7 +13,7 @@ const Login = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        "https://bbc-backend.bbcfinsrv.com/api/auth/login",
+        "https://bbc-backend.bizzbuzzcreations.com/api/auth/login",
         {
           email,
           password,
