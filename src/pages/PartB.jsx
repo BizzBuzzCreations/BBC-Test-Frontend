@@ -58,11 +58,17 @@ const PartB = () => {
     speech.onend = () => {
       setShowInput(true);
     };
+    speech.onerror = () => {
+      setShowInput(true);
+    };
 
     window.speechSynthesis.speak(speech);
 
+    const fallbackTimer = setTimeout(() => setShowInput(true), 30000);
+
     return () => {
       window.speechSynthesis.cancel();
+      clearTimeout(fallbackTimer);
     };
   }, []);
 

@@ -28,12 +28,21 @@ const PartG = () => {
     const speech = new SpeechSynthesisUtterance(text);
     speech.rate = 0.9;
 
-    speech.onend = () => {
+    let fired = false;
+    const runOnce = () => {
+      if (fired) return;
+      fired = true;
       if (callback) callback();
     };
 
+    speech.onend = runOnce;
+    speech.onerror = runOnce;
+
     window.speechSynthesis.cancel();
     window.speechSynthesis.speak(speech);
+
+    // Safety net: some browsers/OSes never fire onend/onerror.
+    setTimeout(runOnce, 30000);
   };
 
   const startTimer = () => {

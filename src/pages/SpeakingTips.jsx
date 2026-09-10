@@ -35,9 +35,23 @@ When you are ready, click Next for your test.
     speech.onend = () => {
       setShowButton(true);
     };
+    speech.onerror = () => {
+      setShowButton(true);
+    };
 
-    window.speechSynthesis.cancel(); 
-    window.speechSynthesis.speak(speech);
+    // Safety net: some browsers/OSes never fire onend/onerror for
+    // long utterances (e.g. no TTS voices installed, tab loses focus).
+    // Don't let candidates get stuck here if that happens.
+    const fallbackTimer = setTimeout(() => setShowButton(true), 25000);
+
+    if (window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(speech);
+    } else {
+      setShowButton(true);
+    }
+
+    return () => clearTimeout(fallbackTimer);
   }, []);
 
   return (

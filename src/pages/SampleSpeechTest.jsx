@@ -32,9 +32,15 @@ speech.rate=0.9;
 speech.onend=()=>{
 setShowRecordBtn(true);
 };
+speech.onerror=()=>{
+setShowRecordBtn(true);
+};
 
 window.speechSynthesis.cancel();
 window.speechSynthesis.speak(speech);
+
+const fallbackTimer=setTimeout(()=>setShowRecordBtn(true),30000);
+return ()=>clearTimeout(fallbackTimer);
 
 },[]);
 

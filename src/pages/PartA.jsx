@@ -48,25 +48,41 @@ const PartA = () => {
 
     intro.rate = 0.9;
 
+    const speakQuestion = () => {
+      const question = new SpeechSynthesisUtterance(
+        "What is the most powerful tool a salesperson can use to influence a customer’s decision?",
+      );
+
+      question.rate = 0.9;
+
+      question.onend = () => {
+        setShowInput(true);
+      };
+      question.onerror = () => {
+        setShowInput(true);
+      };
+
+      window.speechSynthesis.speak(question);
+    };
+
     intro.onend = () => {
-      setTimeout(() => {
-        const question = new SpeechSynthesisUtterance(
-          "What is the most powerful tool a salesperson can use to influence a customer’s decision?",
-        );
-
-        question.rate = 0.9;
-
-        question.onend = () => {
-          setShowInput(true);
-        };
-
-        window.speechSynthesis.speak(question);
-      }, 1000);
+      setTimeout(speakQuestion, 1000);
+    };
+    intro.onerror = () => {
+      setTimeout(speakQuestion, 1000);
     };
 
     window.speechSynthesis.speak(intro);
 
-    return () => window.speechSynthesis.cancel();
+    // Safety net: if speech synthesis never fires onend/onerror at all
+    // (happens on some browsers/OSes with no TTS voices installed),
+    // don't leave the candidate stuck with no input box.
+    const fallbackTimer = setTimeout(() => setShowInput(true), 30000);
+
+    return () => {
+      window.speechSynthesis.cancel();
+      clearTimeout(fallbackTimer);
+    };
   }, []);
 
   useEffect(() => {

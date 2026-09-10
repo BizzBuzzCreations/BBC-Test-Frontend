@@ -51,17 +51,25 @@ const PartE = () => {
     intro.rate = 0.9;
     instruction.rate = 0.9;
 
-    intro.onend = () => {
-      window.speechSynthesis.speak(instruction);
-    };
-
-    instruction.onend = () => {
+    const startTimer = () => {
       setTimeout(() => {
         setTimerStarted(true);
       }, 1000);
     };
 
+    const speakInstruction = () => {
+      instruction.onend = startTimer;
+      instruction.onerror = startTimer;
+      window.speechSynthesis.speak(instruction);
+    };
+
+    intro.onend = speakInstruction;
+    intro.onerror = speakInstruction;
+
     window.speechSynthesis.speak(intro);
+
+    const fallbackTimer = setTimeout(() => setTimerStarted(true), 30000);
+    return () => clearTimeout(fallbackTimer);
   }, []);
 
   const questions = [
